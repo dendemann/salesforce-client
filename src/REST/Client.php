@@ -13,8 +13,20 @@ use WakeOnWeb\SalesforceClient\REST\GrantType\StrategyInterface as GrantTypeStra
 
 class Client implements ClientInterface
 {
+
+    /**
+     * @var Gateway
+     */
     private $gateway;
+
+    /**
+     * @var GrantTypeStrategyInterface
+     */
     private $grantTypeStrategy;
+
+    /**
+     * @var string
+     */
     private $accessToken;
 
     const OBJECT_PATH = 'sobjects';
