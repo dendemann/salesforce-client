@@ -11,6 +11,7 @@ use WakeOnWeb\SalesforceClient\REST\GrantType\StrategyInterface;
 use WakeOnWeb\SalesforceClient\DTO\SalesforceObjectCreation;
 use WakeOnWeb\SalesforceClient\DTO\SalesforceObject;
 use WakeOnWeb\SalesforceClient\DTO\SalesforceObjectResults;
+use WakeOnWeb\SalesforceClient\REST\Resource\ResourceInterface;
 
 class ClientTest extends TestCase
 {
@@ -29,7 +30,7 @@ class ClientTest extends TestCase
             new Request('GET', 'https://domain.tld', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], '{"foo": "bar"}')
         );
-        $this->assertEquals($sut->getAllObjects(), ['foo' => 'bar']);
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getAllObjects(), ['foo' => 'bar']);
     }
 
     public function test_get_object_metadata()
@@ -38,7 +39,7 @@ class ClientTest extends TestCase
             new Request('GET', 'https://domain.tld', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], '{"foo": "bar"}')
         );
-        $this->assertEquals($sut->getObjectMetadata('foo'), ['foo' => 'bar']);
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObjectMetadata('foo'), ['foo' => 'bar']);
 
 
         $since = new \DateTimeImmutable();
@@ -49,7 +50,7 @@ class ClientTest extends TestCase
             ]),
             new Response(200, [], '{"foo": "bar"}')
         );
-        $this->assertEquals($sut->getObjectMetadata('foo', $since), ['foo' => 'bar']);
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObjectMetadata('foo', $since), ['foo' => 'bar']);
     }
 
     public function test_describe_object_metadata()
@@ -58,7 +59,7 @@ class ClientTest extends TestCase
             new Request('GET', 'https://domain.tld', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], '{"foo": "bar"}')
         );
-        $this->assertEquals($sut->describeObjectMetadata('foo'), ['foo' => 'bar']);
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->describeObjectMetadata('foo'), ['foo' => 'bar']);
 
 
         $since = new \DateTimeImmutable();
@@ -69,7 +70,7 @@ class ClientTest extends TestCase
             ]),
             new Response(200, [], '{"foo": "bar"}')
         );
-        $this->assertEquals($sut->describeObjectMetadata('foo', $since), ['foo' => 'bar']);
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->describeObjectMetadata('foo', $since), ['foo' => 'bar']);
     }
 
     public function test_create_object()
@@ -84,7 +85,7 @@ class ClientTest extends TestCase
         $sut = $this->createSUT(null, new Response(200, [], json_encode($response)));
         // we can't test the request since stream are different ...
         // let's find a way to fix that.
-        $this->assertEquals($sut->createObject('foo', []), SalesforceObjectCreation::createFromArray($response));
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->createObject('foo', []), SalesforceObjectCreation::createFromArray($response));
     }
 
     public function test_patch_object()
@@ -92,7 +93,7 @@ class ClientTest extends TestCase
         $sut = $this->createSUT(null, new Response(204));
         // we can't test the request since stream are different ...
         // let's find a way to fix that.
-        $this->assertNull($sut->patchObject('foo', 1234, []));
+        $this->assertNull($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->patchObject('foo', 1234, []));
     }
 
     public function test_delete_object()
@@ -101,7 +102,7 @@ class ClientTest extends TestCase
             new Request('DELETE', 'https://domain.tld', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], '{"foo": "bar"}')
         );
-        $this->assertNull($sut->deleteObject('foo', 1234));
+        $this->assertNull($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->deleteObject('foo', 1234));
     }
 
     public function test_get_object()
@@ -115,7 +116,7 @@ class ClientTest extends TestCase
             new Request('GET', 'https://domain.tld', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], json_encode($response))
         );
-        $this->assertEquals($sut->getObject('foo', 1234), SalesforceObject::createFromArray($response));
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObject('foo', 1234), SalesforceObject::createFromArray($response));
 
         $response = [
             'attributes' => [],
@@ -126,7 +127,7 @@ class ClientTest extends TestCase
             new Request('GET', 'https://domain.tld?fields=foo,bar', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], json_encode($response))
         );
-        $this->assertEquals($sut->getObject('foo', 1234, ['foo', 'bar']), SalesforceObject::createFromArray($response));
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObject('foo', 1234, ['foo', 'bar']), SalesforceObject::createFromArray($response));
     }
 
     public function test_search_soql()
@@ -141,7 +142,7 @@ class ClientTest extends TestCase
             new Request('GET', 'https://domain.tld?q=MY QUERY', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], json_encode($response))
         );
-        $this->assertEquals($sut->searchSOQL('MY QUERY'), SalesforceObjectResults::createFromArray($response));
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_QUERY)->searchSOQL('MY QUERY'), SalesforceObjectResults::createFromArray($response));
     }
 
     public function test_explain_soql()
@@ -150,7 +151,7 @@ class ClientTest extends TestCase
             new Request('GET', 'https://domain.tld?explain=MY QUERY', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], '[]')
         );
-        $this->assertEquals($sut->explainSOQL('MY QUERY'), []);
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_QUERY)->explainSOQL('MY QUERY'), []);
     }
 
     private function createSUT(Request $requestExpected = null, Response $httpClientResponse)

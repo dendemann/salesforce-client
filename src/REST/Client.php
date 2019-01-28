@@ -6,10 +6,11 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use WakeOnWeb\SalesforceClient\ClientInterface;
-use WakeOnWeb\SalesforceClient\DTO;
 use WakeOnWeb\SalesforceClient\Exception;
 use WakeOnWeb\SalesforceClient\Exception\SalesforceClientException;
 use WakeOnWeb\SalesforceClient\REST\GrantType\StrategyInterface as GrantTypeStrategyInterface;
+use WakeOnWeb\SalesforceClient\REST\Resource\ResourceFactory;
+use WakeOnWeb\SalesforceClient\REST\Resource\ResourceInterface;
 
 class Client implements ClientInterface
 {
@@ -34,13 +35,20 @@ class Client implements ClientInterface
      */
     private $accessToken;
 
-    const OBJECT_PATH = 'sobjects';
+    /**
+     * @var ResourceFactory
+     */
+    private $resourceFactory;
 
-    public function __construct(Gateway $gateway, GrantTypeStrategyInterface $grantTypeStrategy, HttpClient $httpClient = null)
-    {
+    public function __construct(
+        Gateway $gateway,
+        GrantTypeStrategyInterface $grantTypeStrategy,
+        HttpClient $httpClient = null
+    ) {
         $this->gateway = $gateway;
         $this->grantTypeStrategy = $grantTypeStrategy;
         $this->httpClient = $httpClient ?: new HttpClient();
+        $this->resourceFactory = new ResourceFactory($this);
     }
 
     public function getAvailableResources(): array
@@ -53,122 +61,30 @@ class Client implements ClientInterface
         );
     }
 
-    public function getAllObjects(): array
+    /**
+     * @inheritdoc
+     */
+    public function getGateway(): Gateway
     {
-        return $this->doAuthenticatedRequest(
-            new Request(
-                'GET',
-                $this->gateway->getServiceDataUrl(static::OBJECT_PATH)
-            )
-        );
+        return $this->gateway;
     }
 
-    public function getObjectMetadata(string $object, \DateTimeInterface $since = null): array
+    /**
+     * @inheritdoc
+     */
+    public function getResource(string $resourceName): ResourceInterface
     {
-        $headers = [];
-        if ($since) {
-            $headers['IF-Modified-Since'] = $since->format('D, j M Y H:i:s e');
-        }
-
-        return $this->doAuthenticatedRequest(
-            new Request(
-                'GET',
-                $this->gateway->getServiceDataUrl(static::OBJECT_PATH.'/'.$object),
-                $headers
-            )
-        );
+        return $this->resourceFactory->createInstance($resourceName);
     }
 
-    public function describeObjectMetadata(string $object, \DateTimeInterface $since = null): array
-    {
-        $headers = [];
-        if ($since) {
-            $headers['IF-Modified-Since'] = $since->format('D, j M Y H:i:s e');
-        }
-
-        return $this->doAuthenticatedRequest(
-            new Request(
-                'GET',
-                $this->gateway->getServiceDataUrl(static::OBJECT_PATH.'/'.$object.'/describe'),
-                $headers
-            )
-        );
-    }
-
-    public function createObject(string $object, array $data): DTO\SalesforceObjectCreation
-    {
-        $data = $this->doAuthenticatedRequest(
-            new Request(
-                'POST',
-                $this->gateway->getServiceDataUrl(static::OBJECT_PATH.'/'.$object),
-                ['content-type' => 'application/json'],
-                json_encode($data)
-            )
-        );
-
-        return DTO\SalesforceObjectCreation::createFromArray($data);
-    }
-
-    public function patchObject(string $object, string $id, array $data)
-    {
-        $this->doAuthenticatedRequest(
-            new Request(
-                'PATCH',
-                $this->gateway->getServiceDataUrl(static::OBJECT_PATH.'/'.$object.'/'.$id),
-                ['content-type' => 'application/json'],
-                json_encode($data)
-            )
-        );
-    }
-
-    public function deleteObject(string $object, string $id)
-    {
-        $this->doAuthenticatedRequest(
-            new Request(
-                'DELETE',
-                $this->gateway->getServiceDataUrl(static::OBJECT_PATH.'/'.$object.'/'.$id)
-            )
-        );
-    }
-
-    public function getObject(string $object, string $id, array $fields = []): DTO\SalesforceObject
-    {
-        $url = $this->gateway->getServiceDataUrl(static::OBJECT_PATH.'/'.$object.'/'.$id);
-
-        if (false === empty($fields)) {
-            $url .= '?fields='.implode(',', $fields);
-        }
-
-        return DTO\SalesforceObject::createFromArray(
-            $this->doAuthenticatedRequest(new Request('GET', $url))
-        );
-    }
-
-    public function searchSOQL(string $query, bool $all = self::NOT_ALL): DTO\SalesforceObjectResults
-    {
-        $url = $this->gateway->getServiceDataUrl($all ? 'queryAll' : 'query').'?q='.$query;
-
-        return DTO\SalesforceObjectResults::createFromArray(
-            $this->doAuthenticatedRequest(
-                new Request('GET', $url)
-            )
-        );
-    }
-
-    public function explainSOQL(string $query, bool $all = self::NOT_ALL): array
-    {
-        $url = $this->gateway->getServiceDataUrl($all ? 'queryAll' : 'query').'?explain='.$query;
-
-        return $this->doAuthenticatedRequest(
-            new Request('GET', $url)
-        );
-    }
-
-    private function doAuthenticatedRequest(Request $request)
+    /**
+     * @inheritdoc
+     */
+    public function doAuthenticatedRequest(Request $request)
     {
         $this->connectIfAccessTokenIsEmpty();
 
-        $request = $request->withAddedHeader('Authorization', 'Bearer '.$this->accessToken);
+        $request = $request->withAddedHeader('Authorization', 'Bearer ' . $this->accessToken);
 
         try {
             $response = $this->httpClient->send($request);
@@ -182,7 +98,7 @@ class Client implements ClientInterface
 
         // Check if response has content
         if ($response->getStatusCode() !== 204) {
-            $body = (string) $response->getBody();
+            $body = (string)$response->getBody();
         }
 
         return json_decode($body, true);

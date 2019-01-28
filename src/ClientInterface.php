@@ -2,28 +2,28 @@
 
 namespace WakeOnWeb\SalesforceClient;
 
+use GuzzleHttp\Psr7\Request;
+use WakeOnWeb\SalesforceClient\REST\Gateway;
+use WakeOnWeb\SalesforceClient\REST\Resource\ResourceInterface;
+
 interface ClientInterface
 {
-    const ALL = true;
-    const NOT_ALL = false;
 
-    public function getAvailableResources(): array;
+    /**
+     * @return Gateway
+     */
+    public function getGateway(): Gateway;
 
-    public function getAllObjects(): array;
+    /**
+     * @param string $resourceName
+     * @return ResourceInterface
+     */
+    public function getResource(string $resourceName): ResourceInterface;
 
-    public function getObjectMetadata(string $object, \DateTimeInterface $since = null): array;
+        /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function doAuthenticatedRequest(Request $request);
 
-    public function describeObjectMetadata(string $object, \DateTimeInterface $since = null): array;
-
-    public function createObject(string $object, array $data): DTO\SalesforceObjectCreation;
-
-    public function patchObject(string $object, string $id, array $data);
-
-    public function deleteObject(string $object, string $id);
-
-    public function getObject(string $object, string $id, array $fields = []): DTO\SalesforceObject;
-
-    public function searchSOQL(string $query, bool $all = false): DTO\SalesforceObjectResults;
-
-    public function explainSOQL(string $query, bool $all = false): array;
 }
