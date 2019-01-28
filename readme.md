@@ -1,7 +1,7 @@
 PHP Salesforce client
 =====================
 
-[![Build Status](https://api.travis-ci.org/WakeOnWeb/salesforce-client.svg)](https://travis-ci.org/WakeOnWeb/salesforce-client)
+Salesforce client forked from https://github.com/WakeOnWeb/salesforce-client
 
 Supported technologies:
 
@@ -35,12 +35,18 @@ Available exception -------------------
 - NotFoundException (when an object cannot be found)
 - ...
 
+Get sobjects resource
+-----------
+```php
+$sobjectsResource = $client->getResource(REST\Resource\ResourceInterface::RESOURCE_SOBJECTS);
+```
+
 Get object
 -----------
 
 ```php
 try {
-    $salesforceObject = $client->getObject( 'Account', '1337ID')); // all fields
+    $salesforceObject = $sobjectsResource->getObject( 'Account', '1337ID')); // all fields
 } catch (\WakeOnWeb\SalesforceClient\Exception\NotFoundException) {
     // this object does not exist, do a specifig thing.
 }
@@ -48,7 +54,7 @@ try {
 //$salesforceObject->getAttributes();
 //$salesforceObject->getFields();
 
-//$client->getObject( 'Account', '1337ID', ['Name', 'OwnerId', 'CreatedAt'] )); // specific fields
+//$sobjectsResource->getObject( 'Account', '1337ID', ['Name', 'OwnerId', 'CreatedAt'] )); // specific fields
 ```
 
 Create object 
@@ -56,7 +62,7 @@ Create object
 
 ```php
 // creation will be a SalesforceObjectCreationObject
-$creation = $client->createObject( 'Account', ['name' => 'Chuck Norrs'] );
+$creation = $sobjectsResource->createObject( 'Account', ['name' => 'Chuck Norrs'] );
 // $creation->getId();
 // $creation->isSuccess();
 // $creation->getErrors();
@@ -67,14 +73,22 @@ Edit object
 -----------
 
 ```php
-$client->patchObject( 'Account', '1337ID', ['name' => 'Chuck Norris'] ));
+$sobjectsResource->patchObject( 'Account', '1337ID', ['name' => 'Chuck Norris'] ));
 ```
 
 Delete object 
 -----------
 
 ```
-$client->deleteObject( 'Account', '1337ID'));
+$sobjectsResource->deleteObject( 'Account', '1337ID'));
+```
+
+Other object info
+-----------
+
+```php
+$sobjectsResource->getAllObjects();
+$sobjectsResource->describeObjectMetadata('Account');
 ```
 
 SOQL
@@ -82,8 +96,10 @@ SOQL
 
 ```php
 // creation will be a SalesforceObjectCreationObjectResults
-$client->searchSOQL('SELECT name from Account'); // NOT_ALL by default.
-$client->searchSOQL('SELECT name from Account', ClientInterface::ALL);
+$queryResource = $client->getResource(REST\Resource\ResourceInterface::RESOURCE_QUERY);
+$queryResource->searchSOQL('SELECT name from Account');
+$queryAllResource = $client->getResource(REST\Resource\ResourceInterface::RESOURCE_QUERY_ALL);
+$queryAllResource->searchSOQL('SELECT name from Account');
 // $creation->getTotalSize();
 // $creation->isDone();
 // $creation->getRecords();
@@ -94,6 +110,4 @@ Other
 
 ```php
 $client->getAvailableResources();
-$client->getAllObjects();
-$client->describeObjectMetadata('Account');
 ```
