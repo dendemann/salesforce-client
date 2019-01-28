@@ -3,34 +3,18 @@
 namespace WakeOnWeb\SalesforceClient\REST\Resource;
 
 use GuzzleHttp\Psr7\Request;
-use WakeOnWeb\SalesforceClient\ClientInterface;
 use WakeOnWeb\SalesforceClient\DTO;
 
 /**
  * Query
  */
-class Query implements ResourceInterface
+class Query extends AbstractResource implements ResourceInterface
 {
 
     /**
      * @var string
      */
     protected $queryMethod = 'query';
-
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * Constructor
-     *
-     * @param ClientInterface $client
-     */
-    public function __construct(ClientInterface $client)
-    {
-        $this->client = $client;
-    }
 
     public function searchSOQL(string $query): DTO\SalesforceObjectResults
     {

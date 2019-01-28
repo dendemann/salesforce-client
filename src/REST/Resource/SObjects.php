@@ -3,13 +3,12 @@
 namespace WakeOnWeb\SalesforceClient\REST\Resource;
 
 use GuzzleHttp\Psr7\Request;
-use WakeOnWeb\SalesforceClient\ClientInterface;
 use WakeOnWeb\SalesforceClient\DTO;
 
 /**
  * SObjects
  */
-class SObjects implements ResourceInterface
+class SObjects extends AbstractResource implements ResourceInterface
 {
 
     /**
@@ -17,20 +16,6 @@ class SObjects implements ResourceInterface
      */
     const OBJECT_PATH = 'sobjects';
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
-
-    /**
-     * Constructor
-     *
-     * @param ClientInterface $client
-     */
-    public function __construct(ClientInterface $client)
-    {
-        $this->client = $client;
-    }
 
     public function getAllObjects(): array
     {
