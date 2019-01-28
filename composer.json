@@ -1,15 +1,15 @@
 {
-    "name": "wakeonweb/salesforce-client",
+    "name": "dendemann/salesforce-client",
     "type": "library",
-    "description": "WakeOnWeb Salesforce client",
+    "description": "Salesforce client",
     "keywords": [
         "salesforce"
     ],
-    "homepage": "https://github.com/wakeonweb/salesforce-client",
+    "homepage": "https://github.com/dendemann/salesforce-client",
     "license": "MIT",
     "authors": [{
         "name": "Community contributors",
-        "homepage": "https://github.com/wakeonweb/salesforce-client/contributors"
+        "homepage": "https://github.com/dendemann/salesforce-client/contributors"
     }],
     "minimum-stability": "dev",
     "require": {
