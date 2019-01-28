@@ -25,6 +25,11 @@ class Client implements ClientInterface
     private $grantTypeStrategy;
 
     /**
+     * @var HttpClient
+     */
+    private $httpClient;
+
+    /**
      * @var string
      */
     private $accessToken;
