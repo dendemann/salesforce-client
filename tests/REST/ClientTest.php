@@ -76,7 +76,7 @@ class ClientTest extends TestCase
     public function test_create_object()
     {
         $response = [
-            'id' => 1337,
+            'id' => 'A1337',
             'success' => true,
             'errors' => [],
             'warnings' => [],
@@ -93,7 +93,7 @@ class ClientTest extends TestCase
         $sut = $this->createSUT(null, new Response(204));
         // we can't test the request since stream are different ...
         // let's find a way to fix that.
-        $this->assertNull($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->patchObject('foo', 1234, []));
+        $this->assertNull($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->patchObject('foo', 'A1234', []));
     }
 
     public function test_delete_object()
@@ -102,32 +102,32 @@ class ClientTest extends TestCase
             new Request('DELETE', 'https://domain.tld', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], '{"foo": "bar"}')
         );
-        $this->assertNull($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->deleteObject('foo', 1234));
+        $this->assertNull($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->deleteObject('foo', 'A1234'));
     }
 
     public function test_get_object()
     {
         $response = [
             'attributes' => [],
-            'Id'=> 1337
+            'Id'=> 'A1337'
         ];
 
         $sut = $this->createSUT(
             new Request('GET', 'https://domain.tld', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], json_encode($response))
         );
-        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObject('foo', 1234), SalesforceObject::createFromArray($response));
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObject('foo', 'A1234'), SalesforceObject::createFromArray($response));
 
         $response = [
             'attributes' => [],
-            'Id'=> 1337
+            'Id'=> 'A1337'
         ];
 
         $sut = $this->createSUT(
             new Request('GET', 'https://domain.tld?fields=foo,bar', ['Authorization' => 'Bearer access_token']),
             new Response(200, [], json_encode($response))
         );
-        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObject('foo', 1234, ['foo', 'bar']), SalesforceObject::createFromArray($response));
+        $this->assertEquals($sut->getResource(ResourceInterface::RESOURCE_SOBJECTS)->getObject('foo', 'A1234', ['foo', 'bar']), SalesforceObject::createFromArray($response));
     }
 
     public function test_search_soql()
