@@ -9,8 +9,10 @@ namespace WakeOnWeb\SalesforceClient\DTO;
  */
 class SalesforceObject
 {
+
+    use FieldAccessTrait;
+
     private $attributes = [];
-    private $fields = [];
 
     private function __construct(array $attributes, array $fields)
     {
@@ -51,18 +53,4 @@ class SalesforceObject
         return array_key_exists($key, $this->attributes);
     }
 
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-    public function getField($key, $default = null)
-    {
-        return $this->hasField($key) ? $this->fields[$key] : $default;
-    }
-
-    public function hasField($key)
-    {
-        return array_key_exists($key, $this->fields);
-    }
 }
