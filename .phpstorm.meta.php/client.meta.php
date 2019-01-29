@@ -5,7 +5,8 @@ namespace PHPSTORM_META {
         map([
             'sobjects' => '\WakeOnWeb\SalesforceClient\REST\Resource\SObjects',
             'query' => '\WakeOnWeb\SalesforceClient\REST\Resource\Query',
-            'queryAll' => '\WakeOnWeb\SalesforceClient\REST\Resource\QueryAll'
+            'queryAll' => '\WakeOnWeb\SalesforceClient\REST\Resource\QueryAll',
+            'jobs' => '\WakeOnWeb\SalesforceClient\REST\Resource\Jobs'
         ])
     );
 

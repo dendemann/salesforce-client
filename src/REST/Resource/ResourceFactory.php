@@ -21,7 +21,8 @@ class ResourceFactory
     const CLASSMAP = [
         ResourceInterface::RESOURCE_SOBJECTS => SObjects::class,
         ResourceInterface::RESOURCE_QUERY => Query::class,
-        ResourceInterface::RESOURCE_QUERY_ALL => QueryAll::class
+        ResourceInterface::RESOURCE_QUERY_ALL => QueryAll::class,
+        ResourceInterface::RESOURCE_JOBS => Jobs::class
     ];
 
     /**

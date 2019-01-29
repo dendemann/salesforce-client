@@ -23,4 +23,9 @@ interface ResourceInterface
      */
     const RESOURCE_QUERY_ALL = 'queryAll';
 
+    /**
+     * var string
+     */
+    const RESOURCE_JOBS = 'jobs';
+
 }
