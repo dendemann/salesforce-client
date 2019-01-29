@@ -49,7 +49,7 @@ class Jobs extends AbstractResource implements ResourceInterface
     /**
      * @param string $jobId
      */
-    public function deleteJob(string $jobId)
+    public function deleteJob(string $jobId): void
     {
 
         $this->client->doAuthenticatedRequest(

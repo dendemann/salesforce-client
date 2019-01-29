@@ -40,6 +40,13 @@ class Client implements ClientInterface
      */
     private $resourceFactory;
 
+    /**
+     * Constructor
+     *
+     * @param Gateway $gateway
+     * @param GrantTypeStrategyInterface $grantTypeStrategy
+     * @param HttpClient|null $httpClient
+     */
     public function __construct(
         Gateway $gateway,
         GrantTypeStrategyInterface $grantTypeStrategy,
@@ -51,6 +58,9 @@ class Client implements ClientInterface
         $this->resourceFactory = new ResourceFactory($this);
     }
 
+    /**
+     * @return array
+     */
     public function getAvailableResources(): array
     {
         return $this->doAuthenticatedRequest(
@@ -104,7 +114,8 @@ class Client implements ClientInterface
         return json_decode($body, true);
     }
 
-    private function connectIfAccessTokenIsEmpty()
+
+    private function connectIfAccessTokenIsEmpty(): void
     {
         if (null !== $this->accessToken) {
             return;

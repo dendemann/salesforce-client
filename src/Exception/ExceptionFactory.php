@@ -6,19 +6,24 @@ use GuzzleHttp\Exception\RequestException;
 
 abstract class ExceptionFactory
 {
-    public static function generateFromRequestException(RequestException $e)
+
+    /**
+     * @param RequestException $e
+     * @return SalesforceClientException
+     */
+    public static function generateFromRequestException(RequestException $e): SalesforceClientException
     {
         $body = (string) $e->getResponse()->getBody();
         $data = json_decode($body, true);
 
         if (false === is_array($data)) {
-            throw static::createDefaultException($e);
+            return static::createDefaultException($e);
         }
 
         $error = current($data);
 
         if (false === is_array($error) || false === array_key_exists('errorCode', $error)) {
-            throw static::createDefaultException($e);
+            return static::createDefaultException($e);
         }
 
         $message = static::generateErrorMessage($error, $e);
@@ -39,7 +44,12 @@ abstract class ExceptionFactory
         }
     }
 
-    private static function generateErrorMessage(array $error, RequestException $e)
+    /**
+     * @param array $error
+     * @param RequestException $e
+     * @return string
+     */
+    private static function generateErrorMessage(array $error, RequestException $e): string
     {
         $message = array_key_exists('message', $error) ? $error['message'] : $e->getMessage();
         $message .= "\nRequest: ".$e->getRequest()->getUri();
@@ -47,8 +57,13 @@ abstract class ExceptionFactory
         return $message;
     }
 
-    private static function createDefaultException(RequestException $e)
+    /**
+     * @param RequestException $e
+     * @return SalesforceClientException
+     */
+    private static function createDefaultException(RequestException $e): SalesforceClientException
     {
         return new SalesforceClientException($e->getMessage(), 0, $e);
     }
+
 }

@@ -9,8 +9,20 @@ namespace WakeOnWeb\SalesforceClient\DTO;
  */
 class SalesforceObjectResults
 {
+
+    /**
+     * @var int
+     */
     private $totalSize;
+
+    /**
+     * @var bool
+     */
     private $done;
+
+    /**
+     * @var array
+     */
     private $records = [];
 
     private function __construct(int $totalSize, bool $done, array $records)
@@ -22,12 +34,19 @@ class SalesforceObjectResults
         }
     }
 
-    private function addRecord(SalesforceObject $record)
+    /**
+     * @param SalesforceObject $record
+     */
+    private function addRecord(SalesforceObject $record): void
     {
         $this->records[] = $record;
     }
 
-    public static function createFromArray(array $data)
+    /**
+     * @param array $data
+     * @return SalesforceObjectResults
+     */
+    public static function createFromArray(array $data): self
     {
         $records = [];
         foreach ($data['records'] as $record) {
@@ -41,18 +60,28 @@ class SalesforceObjectResults
         );
     }
 
+    /**
+     * @return int
+     */
     public function getTotalSize(): int
     {
         return $this->totalSize;
     }
 
+    /**
+     * @return bool
+     */
     public function isDone(): bool
     {
         return $this->done;
     }
 
+    /**
+     * @return array
+     */
     public function getRecords(): array
     {
         return $this->records;
     }
+
 }

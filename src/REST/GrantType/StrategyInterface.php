@@ -6,5 +6,11 @@ use WakeOnWeb\SalesforceClient\REST\Gateway;
 
 interface StrategyInterface
 {
+
+    /**
+     * @param Gateway $gateway
+     * @return string
+     */
     public function buildAccessToken(Gateway $gateway): string;
+
 }

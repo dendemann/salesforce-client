@@ -16,7 +16,9 @@ class SObjects extends AbstractResource implements ResourceInterface
      */
     const OBJECT_PATH = 'sobjects';
 
-
+    /**
+     * @return array
+     */
     public function getAllObjects(): array
     {
         return $this->client->doAuthenticatedRequest(
@@ -27,6 +29,11 @@ class SObjects extends AbstractResource implements ResourceInterface
         );
     }
 
+    /**
+     * @param string $object
+     * @param \DateTimeInterface|null $since
+     * @return array
+     */
     public function getObjectMetadata(string $object, \DateTimeInterface $since = null): array
     {
         $headers = [];
@@ -43,6 +50,11 @@ class SObjects extends AbstractResource implements ResourceInterface
         );
     }
 
+    /**
+     * @param string $object
+     * @param \DateTimeInterface|null $since
+     * @return array
+     */
     public function describeObjectMetadata(string $object, \DateTimeInterface $since = null): array
     {
         $headers = [];
@@ -59,6 +71,11 @@ class SObjects extends AbstractResource implements ResourceInterface
         );
     }
 
+    /**
+     * @param string $object
+     * @param array $data
+     * @return DTO\SalesforceObjectCreation
+     */
     public function createObject(string $object, array $data): DTO\SalesforceObjectCreation
     {
         $data = $this->client->doAuthenticatedRequest(
@@ -73,7 +90,12 @@ class SObjects extends AbstractResource implements ResourceInterface
         return DTO\SalesforceObjectCreation::createFromArray($data);
     }
 
-    public function patchObject(string $object, string $id, array $data)
+    /**
+     * @param string $object
+     * @param string $id
+     * @param array $data
+     */
+    public function patchObject(string $object, string $id, array $data): void
     {
         $this->client->doAuthenticatedRequest(
             new Request(
@@ -85,7 +107,11 @@ class SObjects extends AbstractResource implements ResourceInterface
         );
     }
 
-    public function deleteObject(string $object, string $id)
+    /**
+     * @param string $object
+     * @param string $id
+     */
+    public function deleteObject(string $object, string $id): void
     {
         $this->client->doAuthenticatedRequest(
             new Request(
@@ -95,6 +121,12 @@ class SObjects extends AbstractResource implements ResourceInterface
         );
     }
 
+    /**
+     * @param string $object
+     * @param string $id
+     * @param array $fields
+     * @return DTO\SalesforceObject
+     */
     public function getObject(string $object, string $id, array $fields = []): DTO\SalesforceObject
     {
         $url = $this->client->getGateway()->getServiceDataUrl(static::OBJECT_PATH . '/' . $object . '/' . $id);

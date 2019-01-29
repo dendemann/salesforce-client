@@ -20,7 +20,11 @@ class JobCreation
         $this->fields = $fields;
     }
 
-    public static function createFromArray(array $data)
+    /**
+     * @param array $data
+     * @return JobCreation
+     */
+    public static function createFromArray(array $data): self
     {
         return new self($data);
     }
@@ -28,7 +32,7 @@ class JobCreation
     /**
      * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->getField('id');
     }
@@ -36,7 +40,7 @@ class JobCreation
     /**
      * @return string|null
      */
-    public function getContentUrl()
+    public function getContentUrl(): ?string
     {
         return $this->getField('contentUrl');
     }
@@ -44,7 +48,7 @@ class JobCreation
     /**
      * @return string|null
      */
-    public function getState()
+    public function getState(): ?string
     {
         return $this->getField('state');
     }

@@ -16,17 +16,17 @@ trait FieldAccessTrait
     /**
      * @return array
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
 
     /**
      * @param string $key
-     * @param null $default
+     * @param mixed $default
      * @return mixed
      */
-    public function getField($key, $default = null)
+    public function getField(string $key, $default = null)
     {
         return $this->hasField($key) ? $this->fields[$key] : $default;
     }
@@ -35,7 +35,7 @@ trait FieldAccessTrait
      * @param string $key
      * @return bool
      */
-    public function hasField($key)
+    public function hasField(string $key): bool
     {
         return array_key_exists($key, $this->fields);
     }

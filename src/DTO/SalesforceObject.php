@@ -12,43 +12,75 @@ class SalesforceObject
 
     use FieldAccessTrait;
 
+    /**
+     * @var array
+     */
     private $attributes = [];
 
+    /**
+     * Constructor
+     *
+     * @param array $attributes
+     * @param array $fields
+     */
     private function __construct(array $attributes, array $fields)
     {
         $this->attributes = $attributes;
         $this->fields = $fields;
     }
 
-    public static function createFromArray(array $data)
+    /**
+     * @param array $data
+     * @return SalesforceObject
+     */
+    public static function createFromArray(array $data): SalesforceObject
     {
         $attributes = array_key_exists('attributes', $data) ? (array) $data['attributes'] : [];
         unset($data['attributes']);
 
         return new self($attributes, $data);
+
     }
 
-    public function getType()
+    /**
+     * @return string|null
+     */
+    public function getType(): ?string
     {
         return $this->getAttribute('type');
     }
 
-    public function getUrl()
+    /**
+     * @return string|null
+     */
+    public function getUrl(): ?string
     {
         return $this->getAttribute('url');
     }
 
-    public function getAttributes()
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    public function getAttribute($key, $default = null)
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getAttribute(string $key, $default = null)
     {
         return $this->hasAttribute($key) ? $this->attributes[$key] : $default;
     }
 
-    public function hasAttribute($key)
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function hasAttribute(string $key): bool
     {
         return array_key_exists($key, $this->attributes);
     }

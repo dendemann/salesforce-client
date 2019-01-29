@@ -9,11 +9,35 @@ namespace WakeOnWeb\SalesforceClient\DTO;
  */
 class SalesforceObjectCreation
 {
+
+    /**
+     * @var string
+     */
     private $id;
+
+    /**
+     * @var bool
+     */
     private $success;
+
+    /**
+     * @var array
+     */
     private $errors = [];
+
+    /**
+     * @var array
+     */
     private $warnings = [];
 
+    /**
+     * Constructor
+     *
+     * @param string $id
+     * @param bool $success
+     * @param array $errors
+     * @param array $warnings
+     */
     private function __construct(string $id, bool $success, array $errors = [], array $warnings = [])
     {
         $this->id = $id;
@@ -22,7 +46,11 @@ class SalesforceObjectCreation
         $this->warnings = $warnings;
     }
 
-    public static function createFromArray(array $data)
+    /**
+     * @param array $data
+     * @return SalesforceObjectCreation
+     */
+    public static function createFromArray(array $data): SalesforceObjectCreation
     {
         return new self(
             (string) $data['id'],
@@ -32,23 +60,36 @@ class SalesforceObjectCreation
         );
     }
 
-    public function getId()
+    /**
+     * @return string
+     */
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function isSuccess()
+    /**
+     * @return bool
+     */
+    public function isSuccess(): bool
     {
         return $this->success;
     }
 
-    public function getErrors()
+    /**
+     * @return array
+     */
+    public function getErrors(): array
     {
         return $this->errors;
     }
 
-    public function getWarnings()
+    /**
+     * @return array
+     */
+    public function getWarnings(): array
     {
         return $this->warnings;
     }
+
 }

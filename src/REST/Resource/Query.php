@@ -16,6 +16,10 @@ class Query extends AbstractResource implements ResourceInterface
      */
     protected $queryMethod = 'query';
 
+    /**
+     * @param string $query
+     * @return DTO\SalesforceObjectResults
+     */
     public function searchSOQL(string $query): DTO\SalesforceObjectResults
     {
         $url = $this->client->getGateway()->getServiceDataUrl($this->queryMethod) . '?q=' . $query;
@@ -27,6 +31,10 @@ class Query extends AbstractResource implements ResourceInterface
         );
     }
 
+    /**
+     * @param string $query
+     * @return array
+     */
     public function explainSOQL(string $query): array
     {
         $url = $this->client->getGateway()->getServiceDataUrl($this->queryMethod) . '?explain=' . $query;
