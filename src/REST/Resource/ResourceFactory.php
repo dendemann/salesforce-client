@@ -19,10 +19,10 @@ class ResourceFactory
      * @var string[]
      */
     const CLASSMAP = [
-        ResourceInterface::RESOURCE_SOBJECTS => SObjects::class,
-        ResourceInterface::RESOURCE_QUERY => Query::class,
-        ResourceInterface::RESOURCE_QUERY_ALL => QueryAll::class,
-        ResourceInterface::RESOURCE_JOBS => Jobs::class
+        ResourceInterface::RESOURCE_SOBJECTS => SObjectsResource::class,
+        ResourceInterface::RESOURCE_QUERY => QueryResource::class,
+        ResourceInterface::RESOURCE_QUERY_ALL => QueryAllResource::class,
+        ResourceInterface::RESOURCE_JOBS => JobsResource::class
     ];
 
     /**

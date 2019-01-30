@@ -3,9 +3,9 @@
 namespace WakeOnWeb\SalesforceClient\REST\Resource;
 
 /**
- * QueryAll
+ * QueryAllResource
  */
-class QueryAll extends Query
+class QueryAllResource extends QueryResource
 {
 
     /**

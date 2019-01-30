@@ -6,9 +6,9 @@ use GuzzleHttp\Psr7\Request;
 use WakeOnWeb\SalesforceClient\DTO;
 
 /**
- * Jobs
+ * JobsResource
  */
-class Jobs extends AbstractResource implements ResourceInterface
+class JobsResource extends AbstractResource implements ResourceInterface
 {
 
     /**

@@ -6,9 +6,9 @@ use GuzzleHttp\Psr7\Request;
 use WakeOnWeb\SalesforceClient\DTO;
 
 /**
- * Query
+ * QueryResource
  */
-class Query extends AbstractResource implements ResourceInterface
+class QueryResource extends AbstractResource implements ResourceInterface
 {
 
     /**

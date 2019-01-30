@@ -6,9 +6,9 @@ use GuzzleHttp\Psr7\Request;
 use WakeOnWeb\SalesforceClient\DTO;
 
 /**
- * SObjects
+ * SObjectsResource
  */
-class SObjects extends AbstractResource implements ResourceInterface
+class SObjectsResource extends AbstractResource implements ResourceInterface
 {
 
     /**
